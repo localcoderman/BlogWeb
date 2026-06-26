@@ -4,66 +4,102 @@ import { Input } from "@/components/ui/input";
 import { RouteSignin } from "@/helpers/RouteName";
 import React, { useState } from "react";
 import { PiUserPlus } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import axios from "axios";
+import { getenv } from "@/helpers/GetEnv";
+import { showToast } from "@/helpers/ShowToast";
+import { ToastContainer } from "react-toastify";
+
 
 const signupSchema = z
   .object({
-    name: z.string().min(3, "Naam kam az kam 3 characters ka hona chahiye."),
-    email: z.string().email("Ghalat Email! Sahi format use karein."),
+    name: z
+      .string()
+      .trim()
+      .min(1, "Full name is required.")
+      .min(3, "Name must be at least 3 characters long."),
+    email: z
+      .string()
+      .trim()
+      .min(1, "Email address is required.")
+      .email("Invalid email format. Please use a valid email."),
     password: z
       .string()
-      .min(6, "Password kam az kam 6 characters ka hona chahiye."),
-    confirmPassword: z.string(),
+      .min(1, "Password is required.")
+      .min(6, "Password must be at least 6 characters long."),
+    confirmPassword: z.string().min(1, "Please confirm your password."),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords aapas mein match nahi kar rahay!",
+    message: "Passwords do not match!",
     path: ["confirmPassword"],
   });
 
 const Signup = () => {
+
+  const navigate = useNavigate()
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     const submissionData = { name, email, password, confirmPassword };
-
-    const result = signupSchema.safeParse(submissionData);
+    const result = await signupSchema.safeParse(submissionData);
 
     if (!result.success) {
-      const fieldErrors = {};
-      result.error.errors.forEach((err) => {
-        fieldErrors[err.path[0]] = err.message;
-      });
-      setErrors(fieldErrors);
+      const errorArray = JSON.parse(result.error.message);
+      setError(errorArray[0].message);
       return;
     }
 
-    setErrors({});
-    console.log("Validated Sign Up Data:", result.data);
-    setFormData(result.data);
+    setIsLoading(true);
 
-    // Yahan aap apni Backend API call kar sakte hain (e.g., Axios/Fetch)
+    try {
+      const { confirmPassword: _, ...backendData } = result.data;
 
-    // Form khali karne ke liye ()
-    setName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
+      const response = await axios.post(`${getenv("VITE_API_BASE_URL")}/auth/register` , backendData)
+
+      if(response.status ===200){
+       const data = response.data
+       showToast("success",data.message)
+       console.log(data);
+       navigate(RouteSignin)
+        
+      }
+   
+
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    } catch (apiError) {
+      console.error("API Error:", apiError);
+      const error = apiError.response?.data?.message || "Something went wrong"
+      showToast("error",error)
+
+      setName("")
+      setEmail("")
+      setPassword("")
+      setConfirmPassword("")
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <>
       <Topbar />
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 py-12 dark:bg-zinc-950">
+        <ToastContainer/>
         <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          {/* Heading Section */}
           <div className="mb-6 text-center">
             <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
               Create an Account
@@ -73,9 +109,8 @@ const Signup = () => {
             </p>
           </div>
 
-          {/* Form Section */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name Input */}
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            {/* Full Name */}
             <div className="space-y-1.5">
               <label
                 htmlFor="name"
@@ -89,15 +124,11 @@ const Signup = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Doe"
+                disabled={isLoading}
               />
-              {errors.name && (
-                <p className="text-xs text-destructive mt-1 font-medium">
-                  {errors.name}
-                </p>
-              )}
             </div>
 
-            {/* Email Input */}
+            {/* Email Address */}
             <div className="space-y-1.5">
               <label
                 htmlFor="email"
@@ -112,15 +143,11 @@ const Signup = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
                 placeholder="name@example.com"
+                disabled={isLoading}
               />
-              {errors.email && (
-                <p className="text-xs text-destructive mt-1 font-medium">
-                  {errors.email}
-                </p>
-              )}
             </div>
 
-            {/* Password Input */}
+            {/* Password */}
             <div className="space-y-1.5">
               <label
                 htmlFor="password"
@@ -135,15 +162,11 @@ const Signup = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
                 placeholder="••••••••"
+                disabled={isLoading}
               />
-              {errors.password && (
-                <p className="text-xs text-destructive mt-1 font-medium">
-                  {errors.password}
-                </p>
-              )}
             </div>
 
-            {/* Confirm Password Input */}
+            {/* Confirm Password */}
             <div className="space-y-1.5">
               <label
                 htmlFor="confirmPassword"
@@ -158,25 +181,27 @@ const Signup = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 autoComplete="new-password"
                 placeholder="••••••••"
+                disabled={isLoading}
               />
-              {errors.confirmPassword && (
-                <p className="text-xs text-destructive mt-1 font-medium">
-                  {errors.confirmPassword}
-                </p>
-              )}
             </div>
 
-            {/* Submit Button */}
+           
+            {error && (
+              <p className="text-sm text-destructive mt-2 font-medium text-center bg-destructive/10 py-2 rounded-md border border-destructive/20">
+                {error}
+              </p>
+            )}
+
             <Button
               type="submit"
               className="w-full mt-2 flex items-center justify-center gap-2"
+              disabled={isLoading}
             >
               <PiUserPlus className="text-lg" />
-              <span>Sign Up</span>
+              <span>{isLoading ? "Signing Up..." : "Sign Up"}</span>
             </Button>
           </form>
 
-          {/* Footer Section */}
           <p className="mt-6 text-center text-xs text-zinc-500 dark:text-zinc-400">
             Already have an account?{" "}
             <Link

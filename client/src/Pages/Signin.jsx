@@ -1,50 +1,63 @@
 import Topbar from "@/components/Topbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Shadcn ka wrapper component
-import { RouteSignup } from "@/helpers/RouteName";
+import { RouteIndex, RouteSignup } from "@/helpers/RouteName";
 import React, { useState } from "react";
 import { PiSignIn } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import axios from "axios";
+import { getenv } from "../helpers/GetEnv";
+import { showToast } from "@/helpers/ShowToast";
 
 // 1. Zod Validation Schema Define Kiya
 const loginSchema = z.object({
-  email: z.string().email("Ghalat Email! Sahi format use karein."),
-  password: z
+  email: z
     .string()
-    .min(6, "Password kam az kam 6 characters ka hona chahiye."),
+    .trim()
+    .min(1, "Email address is required.")
+    .email("Invalid email format. Please use a valid email."),
+  password: z.string().min(1, "Password is required."),
 });
 
 const Signin = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({}); // Errors store karne ke liye
+  const [errors, setErrors] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const submissionData = { email, password };
-
-    // 2. Zod Se Validate Karein
     const result = loginSchema.safeParse(submissionData);
 
     if (!result.success) {
-      // Agar validation fail ho jaye, to errors form par set karein
-      const fieldErrors = {};
-      result.error.errors.forEach((err) => {
-        fieldErrors[err.path[0]] = err.message;
-      });
-      setErrors(fieldErrors);
-      return; // Code yahan se aage nahi jayega
+      const errorArray = JSON.parse(result.error.message);
+      setErrors(errorArray[0].message);
+      return;
     }
 
-    // Agar validation pass ho jaye
-    setErrors({}); // Pehle wale errors clear karein
-    console.log("Validated Sign In Data:", result.data);
-    setFormData(result.data);
+    setErrors("");
+    try {
+      const data = result.data;
+      const response = await axios.post(
+        `${getenv("VITE_API_BASE_URL")}/auth/login`,
+        data,
+        { withCredentials: true },
+      );
 
-    // API call logic yahan aayegi...
+      if (response.status === 200) {
+        const data = response.data;
+       showToast("success",data.message)
+        navigate(RouteIndex);
+      }
+    } catch (error) {
+      showToast("error",error?.response?.data?.message || "Something went Wrong")
+    }
+
+    setFormData(result.data);
 
     setEmail("");
     setPassword("");
@@ -83,11 +96,11 @@ const Signin = () => {
                 autoComplete="email"
                 placeholder="name@example.com"
               />
-              {errors.email && (
+              {/* {errors.email && (
                 <p className="text-xs text-destructive mt-1 font-medium">
                   {errors.email}
                 </p>
-              )}
+              )} */}
             </div>
 
             {/* Password Input */}
@@ -111,12 +124,18 @@ const Signin = () => {
                 autoComplete="current-password"
                 placeholder="••••••••"
               />
-              {errors.password && (
+              {/* {errors.password && (
                 <p className="text-xs text-destructive mt-1 font-medium">
                   {errors.password}
                 </p>
-              )}
+              )} */}
             </div>
+
+            {errors && (
+              <p className="text-sm text-destructive mt-2 font-medium text-center bg-destructive/10 py-2 rounded-md border border-destructive/20">
+                {errors}
+              </p>
+            )}
 
             {/* Submit Button */}
             <Button
