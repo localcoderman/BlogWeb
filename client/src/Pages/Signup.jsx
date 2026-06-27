@@ -10,6 +10,7 @@ import axios from "axios";
 import { getenv } from "@/helpers/GetEnv";
 import { showToast } from "@/helpers/ShowToast";
 import { ToastContainer } from "react-toastify";
+import GoogleLogin from "@/components/GoogleLogin";
 
 
 const signupSchema = z
@@ -107,6 +108,13 @@ const Signup = () => {
             <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
               Enter your details to create a new account
             </p>
+          </div>
+
+          <div>
+            <GoogleLogin/>
+          </div>
+          <div className="w-full flex justify-center items-center border my-5"> 
+            <span className="absolute bg-white ">Or</span>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>

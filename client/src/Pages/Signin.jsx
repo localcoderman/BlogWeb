@@ -9,6 +9,7 @@ import { z } from "zod";
 import axios from "axios";
 import { getenv } from "../helpers/GetEnv";
 import { showToast } from "@/helpers/ShowToast";
+import GoogleLogin from "@/components/GoogleLogin";
 
 // 1. Zod Validation Schema Define Kiya
 const loginSchema = z.object({
@@ -76,6 +77,13 @@ const Signin = () => {
             <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
               Sign in your account
             </p>
+          </div>
+
+           <div>
+            <GoogleLogin/>
+          </div>
+          <div className="w-full flex justify-center items-center border my-5"> 
+            <span className="absolute bg-white ">Or</span>
           </div>
 
           {/* Form Section */}

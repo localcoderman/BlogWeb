@@ -15,7 +15,7 @@ export const Register = async (req, res, next) => {
       });
     }
 
-    const HashPassword = bcrypt.hashSync(password, 10);
+    const HashPassword = await bcrypt.hashSync(password, 10);
     const user = new User({
       name,
       email,
@@ -32,7 +32,7 @@ export const Register = async (req, res, next) => {
     next(new ErrorHandler(500, error.message));
   }
 };
-export const Login = async (req, res) => {
+export const Login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -40,11 +40,9 @@ export const Login = async (req, res) => {
     if (!userExist) {
       return res.status(401).json({
         success: false,
-        message: "User Already Exist",
+        message: "Invalid Email or Password",
       });
     }
-
-    console.log(userExist.password);
 
     const hashpass = userExist.password;
 
@@ -74,16 +72,63 @@ export const Login = async (req, res) => {
       path: "/",
     });
 
-    const user = await User.findOne({ email });
+    const userData = userExist.toObject();
+    delete userData.password;
 
     res.status(200).json({
       success: true,
-      user,
+      user: userData,
       message: "user Login successfully",
     });
   } catch (error) {
     next(new ErrorHandler(500, error.message));
   }
 };
+export const GoogleLogin = async (req, res, next) => {
+  try {
+    const { name, email, avatar } = req.body;
+    let userExist;
+    userExist = await User.findOne({ email }).select("+password");
+    if (!userExist) {
+      const password = "Google@" + Math.round(Math.random() * 100000000);
+      const hashpass = bcrypt.hashSync(password, 10);
 
+      const newUser = new User({
+        name,
+        email,
+        password: hashpass,
+        avatar: avatar || "",
+      });
 
+      userExist = await newUser.save();
+    }
+
+    const token = jwt.sign(
+      {
+        _id: userExist._id,
+        name: userExist.name,
+        email: userExist.email,
+        avatar: userExist.avatar,
+      },
+      process.env.JWT_SECRET,
+    );
+
+    res.cookie("AccessToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      path: "/",
+    });
+
+    const userData = userExist.toObject();
+    delete userData.password;
+
+    res.status(200).json({
+      success: true,
+      user: userData,
+      message: "user Login successfully",
+    });
+  } catch (error) {
+    next(new ErrorHandler(500, error.message));
+  }
+};
