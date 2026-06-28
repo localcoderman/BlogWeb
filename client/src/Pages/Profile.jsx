@@ -1,20 +1,21 @@
-import Topbar from "@/components/Topbar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; 
-import { RouteIndex, RouteSignup } from "@/helpers/RouteName";
+import { Card, CardContent } from "@/components/ui/card";
 import React, { useState } from "react";
-import { PiSignIn } from "react-icons/pi";
-import { Link, useNavigate } from "react-router-dom";
-import { z } from "zod";
-import axios from "axios";
-import { getenv } from "../helpers/GetEnv";
-import { showToast } from "@/helpers/ShowToast";
-import GoogleLogin from "@/components/GoogleLogin";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/user/user.slice";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSelector } from "react-redux";
+import userIcon from "@/assets/images/placeHolder.png";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import z from "zod";
+import { getenv } from "@/helpers/GetEnv";
+import { Textarea } from "@/components/ui/textarea"
 
-// 1. Zod Validation Schema Define Kiya
 const loginSchema = z.object({
+  name: z
+    .string()
+    .min(3, "Name must be at least 3 character long."),
+  bio: z
+    .string()
+    .min(3, "Bio must be at least 3 character long."),
   email: z
     .string()
     .trim()
@@ -23,14 +24,7 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required."),
 });
 
-const Signin = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState("");
-
+const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -66,37 +60,45 @@ const Signin = () => {
       );
     }
 
-    // setFormData(result.data);
-
     setEmail("");
     setPassword("");
   };
 
+  const user = useSelector((user) => user?.user?.user);
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
-    <>
-      <Topbar />
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 dark:bg-zinc-950">
-        <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          {/* Heading Section */}
-          <div className="mb-6 text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Welcome Back
-            </h2>
-            <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-              Sign in your account
-            </p>
-          </div>
-
-          <div>
-            <GoogleLogin />
-          </div>
-          <div className="w-full flex justify-center items-center border my-5">
-            <span className="absolute bg-white ">Or</span>
-          </div>
-
-          {/* Form Section */}
+    <Card className=" max-w-3xl mx-auto">
+      <CardContent>
+      <div className="flex justify-center items-center ">
+        <Avatar className="w-28 h-28">
+          <AvatarImage src={user?.user?.avatar || userIcon} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </div>
+        <div>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Input */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="name"
+                className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              >
+                Name
+              </label>
+              <Input
+                id="name"
+               type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter Your Name"
+              />
+            </div>
+            
+            
+            
             <div className="space-y-1.5">
               <label
                 htmlFor="email"
@@ -112,14 +114,24 @@ const Signin = () => {
                 autoComplete="email"
                 placeholder="name@example.com"
               />
-              {/* {errors.email && (
-                <p className="text-xs text-destructive mt-1 font-medium">
-                  {errors.email}
-                </p>
-              )} */}
             </div>
 
-            {/* Password Input */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="bio"
+                className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              >
+                Bio
+              </label>
+
+              <Textarea
+              id="bio"
+               value={bio}
+               onChange={(e) => setBio(e.target.value)}
+               placeholder="Enter Your Bio"
+              />
+            </div>
+
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label
@@ -140,43 +152,25 @@ const Signin = () => {
                 autoComplete="current-password"
                 placeholder="••••••••"
               />
-              {/* {errors.password && (
-                <p className="text-xs text-destructive mt-1 font-medium">
-                  {errors.password}
-                </p>
-              )} */}
             </div>
 
-            {errors && (
+            {/* {errors && (
               <p className="text-sm text-destructive mt-2 font-medium text-center bg-destructive/10 py-2 rounded-md border border-destructive/20">
                 {errors}
               </p>
-            )}
+            )} */}
 
-            {/* Submit Button */}
             <Button
               type="submit"
               className="w-full mt-2 flex items-center justify-center gap-2"
             >
-              <PiSignIn className="text-lg" />
               <span>Sign In</span>
             </Button>
           </form>
-
-          {/* Footer Section */}
-          <p className="mt-6 text-center text-xs text-zinc-500 dark:text-zinc-400">
-            Don't have an account?{" "}
-            <Link
-              to={RouteSignup}
-              className="font-medium text-primary hover:underline"
-            >
-              Sign up
-            </Link>
-          </p>
         </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   );
 };
 
-export default Signin;
+export default Profile;

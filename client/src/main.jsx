@@ -5,15 +5,19 @@ import App from "./App.jsx";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { persistor, store } from "./store";
+import { PersistGate } from "redux-persist/integration/react";
+
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
    <Provider store={store}>
-     <TooltipProvider>
+     <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+      <TooltipProvider>
         <App />
       <ToastContainer/>
     </TooltipProvider>
+     </PersistGate>
    </Provider>
   </StrictMode>,
 );
