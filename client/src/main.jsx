@@ -10,7 +10,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
    <Provider store={store}>
      <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
       <TooltipProvider>
@@ -19,5 +19,5 @@ createRoot(document.getElementById("root")).render(
     </TooltipProvider>
      </PersistGate>
    </Provider>
-  </StrictMode>,
+  // </StrictMode>,
 );

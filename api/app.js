@@ -5,6 +5,7 @@ import cors from "cors"
 import DB_connection from "./src/DB/DB_Connection.js";
 DB_connection()
 import AuthRoutes from "./src/Routes/Auth.Routes.js";
+import userRoutes from "./src/Routes/User.Routes.js";
 
 
 
@@ -18,6 +19,7 @@ app.use(cors({
 //Routes Setup
 
 app.use("/api/auth", AuthRoutes)
+app.use("/api/user" , userRoutes)
 
 
 
