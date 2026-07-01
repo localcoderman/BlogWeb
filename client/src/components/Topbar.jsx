@@ -73,15 +73,15 @@ const Topbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none">
               <Avatar>
-                <AvatarImage src={user.user.avatar || userIcon} />
-              <AvatarFallback>{user.user.name?.charAt(0).toUpperCase() || "TA"}</AvatarFallback>
+                <AvatarImage src={user?.user?.avatar || userIcon} />
+              <AvatarFallback>{user?.user?.name?.charAt(0).toUpperCase() || "TA"}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="flex flex-col gap-0.5 font-normal">
-                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 truncate"> {user.user.name}</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate" title={user.user.email}> {user.user.email}</p>
+                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 truncate"> {user?.user?.name}</p>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate" title={user?.user?.email}> {user?.user?.email}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuItem asChild className="cursor-pointer"> 
                  

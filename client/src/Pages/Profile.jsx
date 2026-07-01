@@ -20,6 +20,7 @@ import axios from "axios";
 import { showToast } from "@/helpers/ShowToast";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "@/redux/user/user.slice";
+import { RouteIndex } from "@/helpers/RouteName";
 
 
 const profileSchema = z.object({
@@ -94,15 +95,15 @@ const Profile = () => {
         `${getenv("VITE_API_BASE_URL")}/user/update-user/${user?.user?._id}`,formData,
         axiosOptions
       );
+      
       if (response.status === 200) {
         const data = response.data;
-
         dispatch(setUser(data.user));
         showToast("success", data.message);
-        navigate(RouteIndex);
+        // navigate(RouteIndex);
       }
     } catch (error) {
-      console.log(error);
+      console.log("error aa giya",error);
       
       showToast(
         "error",
@@ -213,7 +214,7 @@ const Profile = () => {
                   htmlFor="password"
                   className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
                 >
-                  Password
+                  Update Password
                 </label>
               </div>
               <Input
