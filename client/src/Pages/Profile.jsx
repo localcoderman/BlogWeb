@@ -82,7 +82,6 @@ const Profile = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("Validated Form Data:", data);
     try {
       const formData = new FormData()
       formData.append("file", file); 

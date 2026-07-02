@@ -1,11 +1,14 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "@/Layout/Layout";
-import { RouteIndex, RouteProfile, RouteSignin, RouteSignup } from "./helpers/RouteName";
+import { RouteAddCategory, RouteCategoryDetails, RouteEditCategory, RouteIndex, RouteProfile, RouteSignin, RouteSignup } from "./helpers/RouteName";
 import Index from "./Pages/Index";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
 import Profile from "./Pages/Profile";
+import AddCategory from "./Pages/Category/AddCategory";
+import EditCategory from "./Pages/Category/EditCategory";
+import CategoryDetails from "./Pages/Category/CategoryDetails";
 
 const App = () => {
   return (
@@ -14,6 +17,9 @@ const App = () => {
         <Route path={RouteIndex} element={<Layout />}>
           <Route index element={<Index />}></Route>
           <Route path={RouteProfile} element={<Profile/>}></Route>
+          <Route path={RouteAddCategory} element={<AddCategory/>}></Route>
+          <Route path={RouteEditCategory()} element={<EditCategory/>}></Route>
+          <Route path={RouteCategoryDetails} element={<CategoryDetails/>}></Route>
 
         </Route>
         <Route path={RouteSignin} element={<Signin/>}/>

@@ -17,6 +17,7 @@ import { LiaBlogSolid } from "react-icons/lia";
 import { FaRegComments } from "react-icons/fa6";
 import { PiUsersThreeLight } from "react-icons/pi";
 import { GoDot } from "react-icons/go";
+import { RouteCategoryDetails } from "@/helpers/RouteName";
 const Appsidebar = () => {
   return (
     <Sidebar>
@@ -33,14 +34,16 @@ const Appsidebar = () => {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton>
-               <BiCategoryAlt />
-                <Link to=""> Categories</Link>
-              </SidebarMenuButton>
+              <Link to={RouteCategoryDetails}>
+                <SidebarMenuButton>
+                  <BiCategoryAlt />
+                  Categories
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>
-               <LiaBlogSolid />
+                <LiaBlogSolid />
                 <Link to=""> Blogs</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -59,9 +62,7 @@ const Appsidebar = () => {
           </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup>
-            <SidebarGroupLabel>
-                Categories
-            </SidebarGroupLabel>
+          <SidebarGroupLabel>Categories</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton>
@@ -72,7 +73,6 @@ const Appsidebar = () => {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-   
     </Sidebar>
   );
 };

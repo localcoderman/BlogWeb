@@ -6,6 +6,8 @@ import DB_connection from "./src/DB/DB_Connection.js";
 DB_connection()
 import AuthRoutes from "./src/Routes/Auth.Routes.js";
 import userRoutes from "./src/Routes/User.Routes.js";
+import CategoryRoute from "./src/Routes/Category.Routes.js";
+
 
 
 
@@ -20,7 +22,7 @@ app.use(cors({
 
 app.use("/api/auth", AuthRoutes)
 app.use("/api/user" , userRoutes)
-
+app.use("/api/category", CategoryRoute )
 
 
 
