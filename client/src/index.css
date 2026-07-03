@@ -135,3 +135,82 @@
 body{
   font-family: "Nunito", sans-serif;
 }
+
+
+
+.main-container {
+  font-family: var(--ck-content-font-family);
+  width: 100%; 
+  padding: 0 15px; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.editor-container_classic-editor .editor-container__editor {
+  width: 100%; 
+  min-width: 0; 
+  max-width: 100%;
+}
+
+.editor-container_include-block-toolbar {
+  margin-left: 0; 
+}
+
+.editor-container__sidebar_ckeditor-ai:has(.ck-tabs.ck-hidden) {
+  max-width: 0;
+  min-width: 0;
+}
+
+
+@media (min-width: 768px) {
+  .main-container {
+    width: 90%; 
+  }
+  
+  .editor-container_include-block-toolbar {
+    margin-left: 20px; 
+  }
+}
+
+
+@media (min-width: 1024px) {
+  .main-container {
+    width: fit-content; 
+    padding: 0;
+  }
+
+  .editor-container_classic-editor .editor-container__editor {
+    min-width: 795px; 
+    max-width: 795px;
+  }
+
+  .editor-container_include-block-toolbar {
+    margin-left: 42px;
+  }
+}
+
+
+
+
+
+/* .main-container {
+	font-family: var(--ck-content-font-family);
+	width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+.editor-container_classic-editor .editor-container__editor {
+	min-width: 795px;
+	max-width: 795px;
+}
+
+.editor-container_include-block-toolbar {
+	margin-left: 42px;
+}
+
+.editor-container__sidebar_ckeditor-ai:has(.ck-tabs.ck-hidden) {
+	max-width: 0;
+	min-width: 0;
+} */
