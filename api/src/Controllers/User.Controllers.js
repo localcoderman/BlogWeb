@@ -33,13 +33,12 @@ export const updateUser = async (req, res, next) => {
     user.email = email;
     user.bio = bio;
 
-    // 1. Password hashing logic
+
     if (password && password.trim() !== "") {
       const hashPassword = await bcrypt.hash(password, 10);
       user.password = hashPassword;
     }
 
-    // 2. Image upload logic (Variable ko pehle bahar declare kiya)
     let result; 
 
     if (req.file) {
@@ -53,18 +52,16 @@ export const updateUser = async (req, res, next) => {
         overwrite: true,
       });
 
-      // 🔥 Zaroori Step: Cloudinary ka URL user ke database profile field mian save karein
-      // (Farz karein aapke schema mian field ka naam 'avatar' ya 'profilePic' hai)
+     
       user.avatar = result.secure_url; 
     }
   
-    // Ab console.log crash nahi karega, agar file hogi to result print hoga warna undefined
+   
     if (result) console.log("Cloudinary Result:", result);
 
-    // 3. Database mian save karein
+   
     await user.save();
 
-    // 4. Response tayar karein
     const updateData = user.toObject({ getters: true });
     delete updateData.password;
 

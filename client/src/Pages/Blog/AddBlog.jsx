@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { getenv } from "@/helpers/GetEnv";
 import axios from "axios";
 import { showToast } from "@/helpers/ShowToast";
-import { RouteCategoryDetails } from "@/helpers/RouteName";
+import { RouteBlog, RouteCategoryDetails } from "@/helpers/RouteName";
 import { useNavigate } from "react-router-dom";
 import { PiUpload } from "react-icons/pi";
 import {
@@ -20,17 +20,15 @@ import {
 } from "@/components/ui/select";
 import { useAxios } from "@/hooks/useAiox";
 import Dropzone from "react-dropzone";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Editor from "@/components/Editor";
+import { useSelector } from "react-redux";
 
 const slugFormSchema = z.object({
   tittle: z
     .string()
-    .min(3, { message: "Tittle must be at least 3 characters long." })
-    .max(50, { message: "Tittle can have a maximum of 50 characters." }),
-  category: z
-    .string()
-    .min(3, { message: "Tittle must be at least 3 characters long." }),
+    .min(3, { message: "Title must be at least 3 characters long." })
+    .max(50, { message: "Title can have a maximum of 50 characters." }),
+  category: z.string().min(1, { message: "Category selection is required." }), // Message fixed
   slug: z
     .string()
     .min(3, { message: "Slug is essential." })
@@ -38,10 +36,16 @@ const slugFormSchema = z.object({
       message:
         "Only lowercase letters, numbers, and hyphens (-) are allowed in the slug.",
     }),
-  blogContent: z.string().min(3, { message: "Slug is essential." }),
+  blogContent: z
+    .string()
+    .min(3, { message: "Blog content must be at least 3 characters long." }), // Message fixed
 });
+
 const axiosOptions = { withCredentials: true };
+
 const AddBlog = () => {
+  const user = useSelector((state) => state.user.user);
+
   const [filePreview, setfilePreview] = useState();
   const [file, setfile] = useState();
 
@@ -53,8 +57,6 @@ const AddBlog = () => {
     `${getenv("VITE_API_BASE_URL")}/category/all-category`,
     axiosOptions,
   );
-
-  console.log(categoryData);
 
   const navigate = useNavigate();
   const {
@@ -75,6 +77,7 @@ const AddBlog = () => {
   });
 
   const tittleValue = watch("tittle");
+  const selectedCategoryId = watch("category");
 
   useEffect(() => {
     if (tittleValue) {
@@ -92,21 +95,32 @@ const AddBlog = () => {
   }, [tittleValue, setValue]);
 
   const onSubmit = async (data) => {
-    console.log("Validated Form Data:", data);
-
+    const newData = { ...data, author: user.user._id };
     try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("tittle", newData.tittle);
+      formData.append("author", newData.author);
+      formData.append("slug", newData.slug);
+      formData.append("category", newData.category);
+      formData.append("blogContent", newData.blogContent);
+      console.log(`${getenv("VITE_API_BASE_URL")}/blog/add`);
+
       const response = await axios.post(
-        `${getenv("VITE_API_BASE_URL")}/category/create/`,
-        data,
-        { withCredentials: true },
+        `${getenv("VITE_API_BASE_URL")}/blog/add`,
+        formData,
+        axiosOptions,
       );
 
       if (response.status === 200) {
         const data = response.data;
-        // dispatch(setUser(data.user));
-        showToast("success", data.message);
+        //  dispatch(setUser(data.user));
         reset();
-        navigate(RouteCategoryDetails);
+        setfile(null);
+        setfilePreview(null);
+        showToast("success", data.message);
+
+        // navigate(RouteBlog);
       }
     } catch (error) {
       console.log("error aa giya", error);
@@ -125,12 +139,16 @@ const AddBlog = () => {
     setfilePreview(preview);
   };
 
+  const handleEditorData = (event, editor) => {
+    const data = editor.getData();
+
+    setValue("blogContent", data, { shouldValidate: true });
+  };
+
   return (
-    // max-w-xl rakhna behtar hai taake input fields bohot zyada wide aur ajeeb na lagein dashboard par
     <div className="w-full flex justify-center items-center">
-      <Card className="max-w-6xl mb-10">
+      <Card className="max-w-6xl mb-10 w-full">
         <CardHeader>
-          {/* Shadcn UI ka standard title header */}
           <CardTitle className="text-xl font-bold text-center text-gray-800">
             Create New Blog
           </CardTitle>
@@ -140,11 +158,11 @@ const AddBlog = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">
-                Tittle
+                Title
               </label>
               <input
                 type="text"
-                placeholder="Enter Blog Tittle"
+                placeholder="Enter Blog Title"
                 {...register("tittle")}
                 className={`w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 transition-all ${
                   errors.tittle
@@ -159,6 +177,7 @@ const AddBlog = () => {
               )}
             </div>
 
+            {/* Slug */}
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">
                 Slug
@@ -179,20 +198,29 @@ const AddBlog = () => {
                 </p>
               )}
             </div>
-
             <div>
               <Dropzone
                 onDrop={(acceptedFiles) => handleFileSelection(acceptedFiles)}
               >
                 {({ getRootProps, getInputProps }) => (
-                  <div {...getRootProps()} className="flex flex-col w-36 ">
+                  <div
+                    {...getRootProps()}
+                    className="flex flex-col w-36 cursor-pointer"
+                  >
                     <label className="block text-sm font-medium mb-2 text-gray-700">
                       Featured Image
                     </label>
                     <input {...getInputProps()} />
-                    <div className="flex justify-center items-center w-36 h-28 border-2 border-dashed">
-                      <img src={filePreview} placeholder="click" />
-                      <PiUpload size={25} className="text-gray-400" />
+                    <div className="flex justify-center items-center w-36 h-28 border-2 border-dashed relative rounded-md overflow-hidden bg-gray-50">
+                      {filePreview ? (
+                        <img
+                          src={filePreview}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <PiUpload size={25} className="text-gray-400" />
+                      )}
                     </div>
                   </div>
                 )}
@@ -203,47 +231,54 @@ const AddBlog = () => {
               <label className="block text-sm font-medium text-gray-700">
                 Category
               </label>
-              <Select>
+              <Select
+                onValueChange={(value) =>
+                  setValue("category", value, { shouldValidate: true })
+                }
+              >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select" />
+                  <SelectValue placeholder="Select Category">
+                    {selectedCategoryId
+                      ? categoryData?.categories?.find(
+                          (cat) => cat._id === selectedCategoryId,
+                        )?.name
+                      : undefined}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {categoryData &&
-                      categoryData.categories.length > 0 &&
+                    {categoryData?.categories?.length > 0 &&
                       categoryData.categories.map((category) => (
-                        <SelectItem key={category._id} value={category.name}>
+                        <SelectItem key={category._id} value={category._id}>
                           {category.name}
                         </SelectItem>
                       ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
-
-              {/* <input
-              type="text"
-              placeholder="Enter Blog Tittle"
-              {...register("tittle")}
-              className={`w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 transition-all ${
-                errors.name
-                  ? "border-destructive focus:ring-destructive/20"
-                  : "border-gray-200 focus:border-primary focus:ring-primary/10"
-              }`}
-            /> */}
-              {errors.name && (
+              {errors.category && (
                 <p className="text-xs text-destructive font-medium mt-1">
-                  {errors.name.message}
+                  {errors.category.message}
                 </p>
               )}
             </div>
 
-            <div >
-               <label className="block text-sm font-medium mb-2 text-gray-700">
-               Blog Content
+            {/* Blog Content (CKEditor Fix) */}
+            <div className="space-y-1">
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Blog Content
               </label>
-            <div className="w-full px-3 py-2  border rounded-md text-sm  ">
-  <Editor {...register("blogcontent")} props={{ initialData: "" }} />
-            </div>
+              <div className="w-full px-3 py-2 border rounded-md text-sm">
+                {/* {...register} ko hata diya jo is custom component ko block kar raha tha */}
+                <Editor
+                  props={{ initialData: "", onChange: handleEditorData }}
+                />
+              </div>
+              {errors.blogContent && (
+                <p className="text-xs text-destructive font-medium mt-1">
+                  {errors.blogContent.message}
+                </p>
+              )}
             </div>
 
             <Button
