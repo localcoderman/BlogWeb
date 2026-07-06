@@ -23,11 +23,11 @@ import Dropzone from "react-dropzone";
 import Editor from "@/components/Editor";
 import { useSelector } from "react-redux";
 
-const slugFormSchema = z.object({
+const slugFormSchema = z.object({ 
   tittle: z
     .string()
     .min(3, { message: "Title must be at least 3 characters long." })
-    .max(50, { message: "Title can have a maximum of 50 characters." }),
+    .max(100, { message: "Title can have a maximum of 100 characters." }),
   category: z.string().min(1, { message: "Category selection is required." }), // Message fixed
   slug: z
     .string()
@@ -96,6 +96,9 @@ const AddBlog = () => {
 
   const onSubmit = async (data) => {
     const newData = { ...data, author: user.user._id };
+    if (!file) {
+      showToast("error", "Feature Image required");
+    }
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -117,10 +120,13 @@ const AddBlog = () => {
         //  dispatch(setUser(data.user));
         reset();
         setfile(null);
+        setValue("category", "");
+        setValue("blogContent", "");
         setfilePreview(null);
+
+        navigate(RouteBlog);
         showToast("success", data.message);
 
-        // navigate(RouteBlog);
       }
     } catch (error) {
       console.log("error aa giya", error);
@@ -232,6 +238,7 @@ const AddBlog = () => {
                 Category
               </label>
               <Select
+              value={watch("category") || ""}
                 onValueChange={(value) =>
                   setValue("category", value, { shouldValidate: true })
                 }
@@ -271,7 +278,7 @@ const AddBlog = () => {
               <div className="w-full px-3 py-2 border rounded-md text-sm">
                 {/* {...register} ko hata diya jo is custom component ko block kar raha tha */}
                 <Editor
-                  props={{ initialData: "", onChange: handleEditorData }}
+                  props={{ initialData: watch("blogContent") || "", onChange: handleEditorData }}
                 />
               </div>
               {errors.blogContent && (

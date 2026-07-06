@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { PiSignIn } from "react-icons/pi";
 import SearchBox from "./SearchBox";
-import { RouteIndex, RouteProfile, RouteSignin } from "@/helpers/RouteName";
+import { RouteBlogAdd, RouteIndex, RouteProfile, RouteSignin } from "@/helpers/RouteName";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DropdownMenu,
@@ -92,7 +92,7 @@ const Topbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="cursor-pointer"> 
                  
-                  <Link to="" >
+                  <Link to={RouteBlogAdd} >
                   <FaPlus />
                   Create Blog
                   </Link>
