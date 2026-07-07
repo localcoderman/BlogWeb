@@ -77,7 +77,7 @@ const BlogDetails = () => {
                     <TableCell>{blog?.author?.name}</TableCell>
                     <TableCell>{blog?.category?.name}</TableCell>
                     <TableCell>{blog?.tittle}</TableCell>
-                    <TableCell>{moment(blog?.createdAt).format("DD-MM-YYYY")}</TableCell>
+                    <TableCell>{moment(blog?.createdAt).format(`DD-MM-YYYY (h:mm a)`)}</TableCell>
                     <TableCell>{blog?.slug}</TableCell>
                     <TableCell className="flex gap-3">
                       <Link to={RouteBlogEdit(blog._id)}>

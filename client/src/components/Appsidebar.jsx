@@ -18,7 +18,26 @@ import { FaRegComments } from "react-icons/fa6";
 import { PiUsersThreeLight } from "react-icons/pi";
 import { GoDot } from "react-icons/go";
 import { RouteBlog, RouteCategoryDetails } from "@/helpers/RouteName";
+import { useAxios } from "@/hooks/useAiox";
+import { getenv } from "@/helpers/GetEnv";
+import { useState } from "react";
+
+
+
+const axiosOptions = { withCredentials: true };
 const Appsidebar = () => {
+
+   const {
+      data: categoryData,
+      loading,
+      error,
+    } = useAxios(
+      `${getenv("VITE_API_BASE_URL")}/category/all-category`,
+      axiosOptions
+    );
+
+    console.log(categoryData?.categories);
+    
   return (
     <Sidebar>
       <SidebarHeader className="bg-white flex">
@@ -65,13 +84,18 @@ const Appsidebar = () => {
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Categories</SidebarGroupLabel>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton>
-                <GoDot />
-                <Link to=""> Category items</Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+          <SidebarMenu> 
+           {categoryData?.categories?.length > 0 && categoryData?.categories.map((category) => (
+  <SidebarMenuItem key={category._id}> 
+    <SidebarMenuButton>
+      <GoDot />
+      <Link to={`/category/${category._id}`}>
+        {category.name} 
+      </Link>
+    </SidebarMenuButton>
+  </SidebarMenuItem>
+))}
+            
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

@@ -162,11 +162,11 @@ const EditBlog = () => {
   useEffect(()=>{
 
      if(blogData){
-      setfilePreview(blogData.blog.featureImage)
-      setValue("tittle",blogData.blog.tittle)
-      setValue("slug",blogData.blog.slug)
-      setValue("category",blogData.blog.category._id)
-      setValue("blogContent",blogData.blog.blogContent)
+      setfilePreview(blogData?.blog?.featureImage)
+      setValue("tittle",blogData?.blog?.tittle)
+      setValue("slug",blogData?.blog?.slug)
+      setValue("category",blogData?.blog?.category?._id)
+      setValue("blogContent",blogData?.blog?.blogContent)
      }
 
   },[blogData])

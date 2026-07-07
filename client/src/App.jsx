@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "@/Layout/Layout";
-import { RouteAddCategory, RouteBlog, RouteBlogAdd, RouteBlogEdit, RouteCategoryDetails, RouteEditCategory, RouteIndex, RouteProfile, RouteSignin, RouteSignup } from "./helpers/RouteName";
+import { RouteAddCategory, RouteBlog, RouteBlogAdd, RouteBlogDetails, RouteBlogEdit, RouteCategoryDetails, RouteEditCategory, RouteIndex, RouteProfile, RouteSignin, RouteSignup } from "./helpers/RouteName";
 import Index from "./Pages/Index";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
@@ -11,7 +11,9 @@ import EditCategory from "./Pages/Category/EditCategory";
 import CategoryDetails from "./Pages/Category/CategoryDetails";
 import AddBlog from "./Pages/Blog/AddBlog";
 import EditBlog from "./Pages/Blog/EditBlog";
+import BlogPageDetails from "./Pages/BlogPageDetails";
 import BlogDetails from "./Pages/Blog/BlogDetails";
+
 
 const App = () => {
   return (
@@ -31,6 +33,9 @@ const App = () => {
           <Route path={RouteBlogAdd} element={<AddBlog/>}></Route>
           <Route path={RouteBlogEdit()} element={<EditBlog/>}></Route>
           <Route path={RouteBlog} element={<BlogDetails/>}></Route>
+          <Route path={RouteBlogDetails()} element={<BlogPageDetails/>}></Route>
+
+
 
 
 
