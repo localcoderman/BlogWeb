@@ -3,6 +3,7 @@ import {
   addBlog,
   deleteBlog,
   editBlog,
+  getBlog,
   showAllBlog,
   updateBlog,
 } from "../Controllers/Blog.Controllers.js";
@@ -14,5 +15,6 @@ BlogRoute.get("/edit/:blogid", editBlog);
 BlogRoute.put("/update/:blogid", upload.single("file"), updateBlog);
 BlogRoute.delete("/delete/:blogid", deleteBlog);
 BlogRoute.get("/get-all", showAllBlog);
+BlogRoute.get("/get-blog/:slug", getBlog);
 
 export default BlogRoute;

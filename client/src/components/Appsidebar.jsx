@@ -35,8 +35,6 @@ const Appsidebar = () => {
       `${getenv("VITE_API_BASE_URL")}/category/all-category`,
       axiosOptions
     );
-
-    console.log(categoryData?.categories);
     
   return (
     <Sidebar>
