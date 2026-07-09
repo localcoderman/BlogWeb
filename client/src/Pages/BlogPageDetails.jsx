@@ -4,13 +4,15 @@ import Loading from "@/components/Loading";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getenv } from "@/helpers/GetEnv";
 import { useAxios } from "@/hooks/useAiox";
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const axiosOptions = { withCredentials: true };
 
 const BlogPageDetails = () => {
   const { blog } = useParams();
+ const [callComment, setcallComment] = useState()
+
 
   const {
     data: blogData,
@@ -56,13 +58,13 @@ const BlogPageDetails = () => {
               <Comment className="mt-5" props={{ blogid: blogData.blog._id }} />
             </div>
 
-            <div className="border-t mt-5 pt-5">
+            {/* <div className="border-t mt-5 pt-5">
               <h4>Comments</h4>
               <CommentList
                 className="mt-5"
                 props={{ blogid: blogData.blog._id }}
               />
-            </div>
+            </div> */}
           </div>
         </>
       )}

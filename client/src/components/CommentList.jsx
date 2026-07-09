@@ -7,17 +7,20 @@ import moment from "moment";
 
 const axiosOptions = { withCredentials: true };
 
+
 const CommentList = ({ props }) => {
+
+  
   const {
     data: commentData,
     loading,
     error,
   } = useAxios(
     `${getenv("VITE_API_BASE_URL")}/comment/get/${props.blogid}`,
-    axiosOptions,
+    axiosOptions, [props.callComment]
   );
 
-  console.log(commentData);
+
 
   if (loading) return <div>Loading...</div>;
   return (

@@ -8,6 +8,8 @@ import axios from "axios";
 import { getenv } from "@/helpers/GetEnv";
 import { Textarea } from "./ui/textarea";
 import { useSelector } from "react-redux";
+import CommentList from "./CommentList";
+import { useState } from "react";
 
 const slugFormSchema = z.object({
   comment: z
@@ -17,7 +19,10 @@ const slugFormSchema = z.object({
 });
 
 const Comment = ({ props }) => {
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user.user); 
+  const [callComment, setcallComment] = useState()
+
+    
 
 
   // console.log(user.user._id);
@@ -53,7 +58,8 @@ const Comment = ({ props }) => {
         const data = response.data;
         // dispatch(setUser(data.user));
         showToast("success", data.message);
-        setnewComment(data.comment)
+        setcallComment(data.comment)
+        
         reset();
         // navigate(RouteCategoryDetails);
       }
@@ -96,7 +102,13 @@ const Comment = ({ props }) => {
         </form>
       </div>
 
-      
+         <div className="border-t mt-5 pt-5">
+                    <h4>Comments</h4>
+                    <CommentList
+                      className="mt-5"
+                      props={{ blogid: props.blogid , callComment}}
+                    />
+                  </div>
       
     </div>
   );
