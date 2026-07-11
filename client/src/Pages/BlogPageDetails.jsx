@@ -1,18 +1,19 @@
 import Comment from "@/components/Comment";
+import CommentCount from "@/components/CommentCount";
 import CommentList from "@/components/CommentList";
+import LikeCount from "@/components/LikeCount";
 import Loading from "@/components/Loading";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getenv } from "@/helpers/GetEnv";
 import { useAxios } from "@/hooks/useAiox";
-import React, { useState } from "react";
+import moment from "moment";
+import React from "react";
 import { useParams } from "react-router-dom";
 
 const axiosOptions = { withCredentials: true };
 
 const BlogPageDetails = () => {
   const { blog } = useParams();
- const [callComment, setcallComment] = useState()
-
 
   const {
     data: blogData,
@@ -38,7 +39,16 @@ const BlogPageDetails = () => {
                 <Avatar>
                   <AvatarImage src={blogData?.blog.author.avatar} />
                 </Avatar>
-                <span>{blogData?.blog.author.name}</span>
+                <div>
+                  <p className="font-bold">{blogData?.blog.author.name}</p>
+                  <p className="text-sm flex items-center gap-2">
+                   {moment(blogData?.blog.createdAt).format("DD-MMMM-YYYY")}
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-between items-center gap-5">
+                <LikeCount props={{blogid:blogData.blog._id}}/>
+                <CommentCount props={{blogid:blogData.blog._id}}/>
               </div>
             </div>
             <div className="my-5">

@@ -46,7 +46,7 @@ const Comment = ({ props }) => {
     // console.log("Comment button hit :", data);
 
     try {
-      const newData = { ...data, blogid: props.blogid, author: user.user._id };
+      const newData = { ...data, blogid: props.blogid, user: user.user._id };
 
       const response = await axios.post(
         `${getenv("VITE_API_BASE_URL")}/comment/add`,
