@@ -3,6 +3,7 @@ import CommentCount from "@/components/CommentCount";
 import CommentList from "@/components/CommentList";
 import LikeCount from "@/components/LikeCount";
 import Loading from "@/components/Loading";
+import RelatedBlog from "@/components/RelatedBlog";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getenv } from "@/helpers/GetEnv";
 import { useAxios } from "@/hooks/useAiox";
@@ -13,7 +14,10 @@ import { useParams } from "react-router-dom";
 const axiosOptions = { withCredentials: true };
 
 const BlogPageDetails = () => {
-  const { blog } = useParams();
+  const { blog  , category} = useParams();
+
+  console.log(category);
+  
 
   const {
     data: blogData,
@@ -21,13 +25,13 @@ const BlogPageDetails = () => {
     error,
   } = useAxios(
     `${getenv("VITE_API_BASE_URL")}/blog/get-blog/${blog}`,
-    axiosOptions,
+    axiosOptions, [ blog  , category]
   );
 
   if (loading) return <Loading />;
 
   return (
-    <div className="flex justify-between items-center gap-20 p-5">
+    <div className="flex justify-between  gap-20 p-5">
       {blogData && blogData.blog && (
         <>
           <div className="border rounded w-[70%] p-5">
@@ -67,18 +71,13 @@ const BlogPageDetails = () => {
             <div className="border-t mt-5 pt-5">
               <Comment className="mt-5" props={{ blogid: blogData.blog._id }} />
             </div>
-
-            {/* <div className="border-t mt-5 pt-5">
-              <h4>Comments</h4>
-              <CommentList
-                className="mt-5"
-                props={{ blogid: blogData.blog._id }}
-              />
-            </div> */}
           </div>
         </>
       )}
-      <div className="border rounded w-[30%]"></div>
+      <div className="border rounded w-[30%]">
+
+        <RelatedBlog props={{category:category , currentBlog : blog}}/>
+      </div>
     </div>
   );
 };

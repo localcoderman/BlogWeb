@@ -1,6 +1,8 @@
 import cloudinary from "../config/cloudinary.js";
 import Blog from "../Models/blog.model.js";
 import { ErrorHandler } from "../Utils/HandleError.js";
+import Category from "../Models/category.model.js";
+
 
 export const addBlog = async (req, res, next) => {
   try {
@@ -154,6 +156,47 @@ export const getBlog = async (req,res,next)=>{
     res.status(200).json({
       status: true,
       blog,
+    });
+  } catch (error) {
+    next(new ErrorHandler(500, error.message));
+  }
+}
+
+export const getRelatedBlog = async (req,res,next)=>{
+ try {
+  const {category , blog} = req.params;
+  
+    const categoryData = await Category.findOne({slug :category })
+    if(!categoryData){
+      return next(new ErrorHandler(404, "Category data not Found"));
+    }
+    const categoryId = categoryData._id
+    const relatedBlog = await Blog.find({category : categoryId, slug:{$ne : blog}}).lean();
+    res.status(200).json({
+      status: true,
+      relatedBlog,
+    });
+  } catch (error) {
+    next(new ErrorHandler(500, error.message));
+  }
+}
+
+export const getBlogByCategory = async (req,res,next)=>{
+ try {
+  const {category} = req.params;
+  
+    const categoryData = await Category.findOne({slug :category })
+    if(!categoryData){
+      return next(new ErrorHandler(404, "Category data not Found"));
+    }
+    const categoryId = categoryData._id
+    const blog = await Blog.find({category : categoryId}).populate("author", "name avatar role")
+      .populate("category", "name slug")
+      .lean();
+    res.status(200).json({
+      status: true,
+      blog,
+      categoryData
     });
   } catch (error) {
     next(new ErrorHandler(500, error.message));
