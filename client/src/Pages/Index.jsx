@@ -14,7 +14,6 @@ const Index = () => {
     error,
   } = useAxios(`${getenv("VITE_API_BASE_URL")}/blog/get-all`, axiosOptions, );
 
-  console.log(blogData);
   
 if(loading) return <Loading/>
   return (

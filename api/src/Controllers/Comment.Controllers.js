@@ -51,3 +51,30 @@ export const commentCount = async (req, res, next) => {
     next(new ErrorHandler(401, error.message));
   }
 };
+
+
+export const getAllComments = async (req, res, next) => {
+  try {
+
+    const comments = await Comment.find().populate("user","name").populate("blogid", "tittle" ).lean()
+
+    res.status(200).json({
+      status: true,
+      comments
+    });
+  } catch (error) {
+    next(new ErrorHandler(401, error.message));
+  }
+};
+export const deleteComment = async (req, res, next) => {
+  try {
+const {commentId} = req.params
+    const comments = await Comment.findByIdAndDelete(commentId)
+    res.status(200).json({
+      status: true,
+      message : "Comment Deleted"
+    });
+  } catch (error) {
+    next(new ErrorHandler(401, error.message));
+  }
+};

@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node start",
-    "dev": "nodemon index.js"
+    "dev": "nodemon --trace-warnings index.js"
   },
   "keywords": [],
   "author": "",

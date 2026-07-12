@@ -12,8 +12,6 @@ import { RouteBlogDetails } from "@/helpers/RouteName";
 const BlogCard = ({ props }) => {
   const user = useSelector((state) => state.user.user);
 
-  console.log(props);
-  console.log(props.createdAt);
 
   return (
     <Link to={RouteBlogDetails(props.category.slug, props.slug)} >

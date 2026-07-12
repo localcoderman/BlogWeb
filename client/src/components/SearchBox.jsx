@@ -1,12 +1,30 @@
-import React from 'react'
-import {Input} from '@/components/ui/input'
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { RouteSearch } from "@/helpers/RouteName";
 
 const SearchBox = () => {
-  return (
-    <form action="">
-        <Input placeholder="Search Here..." className="h-9 rounded-full "/>
-    </form>
-  )
-}
+  const navigate = useNavigate()
+  const [querry, setquerry] = useState();
+ const  getInput = (e) => {
+    setquerry(e.target.value);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(RouteSearch(querry))
+  };
 
-export default SearchBox
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <Input
+        name="q"
+        onInput={getInput}
+        placeholder="Search Here..."
+        className="h-9 rounded-full "
+      />
+    </form>
+  );
+};
+
+export default SearchBox;

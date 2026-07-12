@@ -202,3 +202,20 @@ export const getBlogByCategory = async (req,res,next)=>{
     next(new ErrorHandler(500, error.message));
   }
 }
+
+
+export const search = async (req,res,next)=>{
+ try {
+  const {q} = req.query;
+  
+    const blog = await Blog.find({tittle : {$regex : q , $options : "i"}}).populate("author", "name avatar role")
+      .populate("category", "name slug")
+      .lean();
+    res.status(200).json({
+      status: true,
+      blog,
+    });
+  } catch (error) {
+    next(new ErrorHandler(500, error.message));
+  }
+}

@@ -19,10 +19,10 @@ const RelatedBlog = ({ props }) => {
 
   console.log("DATA ", relatedBlogData);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="flex items-center justify-center h-screen font-bold">Loading...</div>;
 
   return (
-    <div className="p-5">
+    <div className="p-5 ">
       <h2 className="text-2xl font-bold mb-2">Related Blogs</h2>
       <div>
         {relatedBlogData && relatedBlogData.relatedBlog.length > 0 ? (

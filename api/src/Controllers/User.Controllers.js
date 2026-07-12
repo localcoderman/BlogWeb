@@ -75,3 +75,38 @@ export const updateUser = async (req, res, next) => {
     next(new ErrorHandler(500, error.message));
   }
 };
+
+
+export const getAllUsers = async(req,res,next)=>{
+
+  try {
+    const users = await User.find().sort({createdAt: -1})
+
+    res.status(200).json({
+      status : true,
+      users
+    })
+    
+  } catch (error) {
+    next(new ErrorHandler(401, error.message));
+    
+  }
+}
+
+export const deleteUser = async(req,res,next)=>{
+
+  try {
+   
+    const{userId} = req.params
+    const users = await User.findByIdAndDelete(userId)
+
+    res.status(200).json({
+      status : true,
+      message : "user Deleted"
+    })
+    
+  } catch (error) {
+    next(new ErrorHandler(401, error.message));
+    
+  }
+}

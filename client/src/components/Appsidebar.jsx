@@ -17,7 +17,7 @@ import { LiaBlogSolid } from "react-icons/lia";
 import { FaRegComments } from "react-icons/fa6";
 import { PiUsersThreeLight } from "react-icons/pi";
 import { GoDot } from "react-icons/go";
-import { RouteBlog, RouteBlogByCategory, RouteCategoryDetails } from "@/helpers/RouteName";
+import { RouteBlog, RouteBlogByCategory, RouteCategoryDetails, RouteCommentDetails, RouteUser } from "@/helpers/RouteName";
 import { useAxios } from "@/hooks/useAiox";
 import { getenv } from "@/helpers/GetEnv";
 import { useState } from "react";
@@ -44,12 +44,15 @@ const Appsidebar = () => {
       <SidebarContent className="bg-white">
         <SidebarGroup>
           <SidebarMenu>
+                <Link to=""> 
             <SidebarMenuItem>
               <SidebarMenuButton>
                 <CiHome />
-                <Link to=""> Home</Link>
+                Home
+                
               </SidebarMenuButton>
             </SidebarMenuItem>
+                </Link>
             <SidebarMenuItem>
               <Link to={RouteCategoryDetails}>
                 <SidebarMenuButton>
@@ -66,18 +69,26 @@ const Appsidebar = () => {
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
+                <Link to={RouteCommentDetails}> 
             <SidebarMenuItem>
               <SidebarMenuButton>
                 <FaRegComments />
-                <Link to=""> Comments</Link>
+                
+                Comments
+                
               </SidebarMenuButton>
             </SidebarMenuItem>
+                </Link>
+                <Link to={RouteUser}> 
             <SidebarMenuItem>
               <SidebarMenuButton>
                 <PiUsersThreeLight />
-                <Link to=""> Users</Link>
+                
+                Users
+                
               </SidebarMenuButton>
             </SidebarMenuItem>
+                </Link>
           </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup>
