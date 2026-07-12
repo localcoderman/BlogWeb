@@ -17,6 +17,8 @@ import BlogByCategory from "./Pages/Blog/BlogByCategory";
 import SearchResults from "./Pages/SearchResults";
 import CommentDetails from "./Pages/CommentDetails";
 import UserDetails from "./Pages/UserDetails";
+import AuthRouteProtection from "./components/AuthRouteProtection";
+import AdminAllowed from "./components/AdminAllowed";
 
 
 const App = () => {
@@ -25,26 +27,38 @@ const App = () => {
       <Routes>
         <Route path={RouteIndex} element={<Layout />}>
           <Route index element={<Index />}></Route>
-          <Route path={RouteProfile} element={<Profile/>}></Route>
 
-          {/* Category Routes  */}
+         
 
-          <Route path={RouteAddCategory} element={<AddCategory/>}></Route>
-          <Route path={RouteEditCategory()} element={<EditCategory/>}></Route>
-          <Route path={RouteCategoryDetails} element={<CategoryDetails/>}></Route>
+         
 
           {/* Blog Routes  */}
-          <Route path={RouteBlogAdd} element={<AddBlog/>}></Route>
-          <Route path={RouteBlogEdit()} element={<EditBlog/>}></Route>
-          <Route path={RouteBlog} element={<BlogDetails/>}></Route>
+         
           <Route path={RouteBlogDetails()} element={<BlogPageDetails/>}></Route>
           <Route path={RouteBlogByCategory()} element={<BlogByCategory/>}></Route>
           <Route path={RouteSearch()} element={<SearchResults/>}></Route>
-          <Route path={RouteCommentDetails} element={<CommentDetails/>}></Route>
+
+
+
+
+          <Route element={<AuthRouteProtection/>}>
+          <Route path={RouteProfile} element={<Profile/>}></Route>
+         
+          
+          </Route>
+
+            <Route element={<AdminAllowed/>}>
+           <Route path={RouteAddCategory} element={<AddCategory/>}></Route>
+          <Route path={RouteEditCategory()} element={<EditCategory/>}></Route>
+          <Route path={RouteCategoryDetails} element={<CategoryDetails/>}></Route>
           <Route path={RouteUser} element={<UserDetails/>}></Route>
+            <Route path={RouteBlogAdd} element={<AddBlog/>}></Route>
+          <Route path={RouteBlogEdit()} element={<EditBlog/>}></Route>
+          <Route path={RouteBlog} element={<BlogDetails/>}></Route>
+          <Route path={RouteCommentDetails} element={<CommentDetails/>}></Route>
 
-
-
+          
+          </Route>
 
 
 

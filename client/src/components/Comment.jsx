@@ -68,7 +68,7 @@ const Comment = ({ props }) => {
 
       showToast(
         "error",
-        error?.response?.data?.message || "Something went Wrong",
+        error?.response?.data?.message || "Please Login into your Account",
       );
     }
   };

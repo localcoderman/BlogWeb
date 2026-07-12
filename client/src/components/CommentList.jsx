@@ -43,7 +43,7 @@ const CommentList = ({ props }) => {
                 <div>
                   <h4 className="font-bold">{comment?.user.name}</h4>
                   <p className="text-xs">{moment(comment?.createdAt).format("DD-MMMM-YYYY")}</p>
-                  <div className="mt-2" ><p className=" bg-[#F5F5F5] pl-5 py-2 rounded ">
+                  <div className="mt-2" ><p className=" bg-[#F5F5F5] px-3 py-2 rounded ">
                     {comment?.comment}</p></div>
                 </div>
               </div>
