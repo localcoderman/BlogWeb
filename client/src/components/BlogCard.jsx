@@ -8,6 +8,7 @@ import icon from "@/assets/images/placeHolder.png";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { RouteBlogDetails } from "@/helpers/RouteName";
+import { MdVerified } from "react-icons/md";
 
 const BlogCard = ({ props }) => {
   const user = useSelector((state) => state.user.user);
@@ -25,13 +26,11 @@ const BlogCard = ({ props }) => {
             <span>{props.author.name}</span>
           </div>
           {props.author.role === "admin" && (
-            <Badge variant="outline" className="bg-red-500 text-white">
-              Admin
-            </Badge>
+           <MdVerified className="size-6 text-red-600" />
           )}
         </div>
         <div className=" my-2">
-          {<img src={props.featureImage} className="rounded" />}
+          {<img src={props.featureImage} className="rounded aspect-video w-full object-cover" />}
         </div>
 
         <div className="mt-5">

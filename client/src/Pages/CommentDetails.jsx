@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { RouteAddCategory, RouteCommentDetails, RouteEditCategory } from "@/helpers/RouteName";
+import {
+  RouteAddCategory,
+  RouteCommentDetails,
+  RouteEditCategory,
+} from "@/helpers/RouteName";
 import { FaEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { handleDelete } from "@/helpers/handleDelete";
@@ -24,28 +28,30 @@ import moment from "moment";
 const axiosOptions = { withCredentials: true };
 
 const CommentDetails = () => {
-
-  const [refresh, setrefresh] = useState (false)
+  const [refresh, setrefresh] = useState(false);
   const {
     data: commentsData,
     loading,
     error,
   } = useAxios(
     `${getenv("VITE_API_BASE_URL")}/comment/get-all-comments`,
-    axiosOptions,[refresh]
+    axiosOptions,
+    [refresh],
   );
 
   console.log(commentsData);
-  
-const handledelete = async(id)=>{
-   const response = await handleDelete(`${getenv("VITE_API_BASE_URL")}/comment/delete-comment/${id}`)
-   setrefresh(!refresh)
-   if(response){
-    showToast("success",response.data.message)
-   }else{
-    showToast("error","Comment Not Deleted")
-   }
-  }
+
+  const handledelete = async (id) => {
+    const response = await handleDelete(
+      `${getenv("VITE_API_BASE_URL")}/comment/delete-comment/${id}`,
+    );
+    setrefresh(!refresh);
+    if (response) {
+      showToast("success", response.data.message);
+    } else {
+      showToast("error", "Comment Not Deleted");
+    }
+  };
 
   if (loading) return <>{<Loading />}</>;
 
@@ -55,11 +61,11 @@ const handledelete = async(id)=>{
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow className="font-extrabold">
-                <TableHead>Blog</TableHead>
+              <TableRow className="font-extrabold ">
+                <TableHead className="text-center">Blog</TableHead>
                 <TableHead>Comment By</TableHead>
                 <TableHead>Date</TableHead>
-                <TableHead>Comment</TableHead>
+                <TableHead className="text-center">Comment</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -67,17 +73,28 @@ const handledelete = async(id)=>{
               {commentsData && commentsData.comments.length > 0 ? (
                 commentsData.comments.map((comment) => (
                   <TableRow key={comment?._id}>
-                    <TableCell>{comment?.blogid?.tittle}</TableCell>
-                    <TableCell>{comment?.user.name}</TableCell>
-                    <TableCell>{moment(comment?.createdAt).format("DD-MMMM-YYYY")}</TableCell>
-                    <TableCell>{comment?.comment}</TableCell>
-                    <TableCell className="flex gap-3">
-                      <Link to={RouteCommentDetails}>
+                    <TableCell className="flex justify-center">
+                      <div className="max-w-100 whitespace-normal text-center break-words">
 
-                      </Link>
+                      {comment?.blogid?.tittle}
+                      
+                      </div>
+                      </TableCell>
+
+                    <TableCell>{comment?.user.name}</TableCell>
+                    <TableCell>
+                      {moment(comment?.createdAt).format("DD-MMMM-YYYY")}
+                    </TableCell>
+                    <TableCell>
+                      <div className="max-w-[250px] whitespace-normal text-center break-words">
+                        {comment?.comment}
+                      </div>
+                    </TableCell>
+                    <TableCell className="flex items-center gap-3 h-full">
+                      
 
                       <Button
-                      onClick={()=>handledelete(comment._id)}
+                        onClick={() => handledelete(comment._id)}
                         variant="outline"
                         className="hover:bg-red-600 hover:text-white"
                         size="icon"

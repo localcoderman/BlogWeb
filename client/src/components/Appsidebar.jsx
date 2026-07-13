@@ -49,7 +49,7 @@ const Appsidebar = () => {
       <SidebarContent className="bg-white">
         <SidebarGroup>
           <SidebarMenu>
-            <Link to="">
+            <Link to="" className="cursor-pointer">
               <SidebarMenuItem>
                 <SidebarMenuButton>
                   <CiHome />
@@ -97,7 +97,7 @@ const Appsidebar = () => {
           }
 
           {
-            user && user.isLoggedIn ? <>
+            user && user.isLoggedIn && user.user.role === 'user' ? <>
 
              <Link to={RouteCommentDetails}>
               <SidebarMenuItem>

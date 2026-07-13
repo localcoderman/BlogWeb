@@ -43,6 +43,7 @@ const App = () => {
 
           <Route element={<AuthRouteProtection/>}>
           <Route path={RouteProfile} element={<Profile/>}></Route>
+          <Route path={RouteCommentDetails} element={<CommentDetails/>}></Route>
          
           
           </Route>
@@ -55,7 +56,6 @@ const App = () => {
             <Route path={RouteBlogAdd} element={<AddBlog/>}></Route>
           <Route path={RouteBlogEdit()} element={<EditBlog/>}></Route>
           <Route path={RouteBlog} element={<BlogDetails/>}></Route>
-          <Route path={RouteCommentDetails} element={<CommentDetails/>}></Route>
 
           
           </Route>

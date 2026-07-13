@@ -3,7 +3,6 @@ import Blog from "../Models/blog.model.js";
 import { ErrorHandler } from "../Utils/HandleError.js";
 import Category from "../Models/category.model.js";
 
-
 export const addBlog = async (req, res, next) => {
   try {
     const { tittle, blogContent, category, slug, author } = req.body;
@@ -130,10 +129,55 @@ export const deleteBlog = async (req, res, next) => {
 
 export const showAllBlog = async (req, res, next) => {
   try {
+    console.log(req.user);
+    const user = req.user;
+    let blog;
+    if (user.role === "admin") {
+      blog = await Blog.find()
+        .populate("author", "name avatar role")
+        .populate("category", "name slug")
+        .sort({ createdAt: -1 })
+        .lean();
+    } else {
+      blog = await Blog.find({ author: user._id })
+        .populate("author", "name avatar role")
+        .populate("category", "name slug")
+        .sort({ createdAt: -1 })
+        .lean();
+    }
+
+    res.status(200).json({
+      status: true,
+      blog,
+    });
+  } catch (error) {
+    next(new ErrorHandler(500, error.message));
+  }
+};
+export const getAllBlog = async (req, res, next) => {
+  try {
     const blog = await Blog.find()
       .populate("author", "name avatar role")
-      .populate("category", "name slug") 
+      .populate("category", "name slug")
       .sort({ createdAt: -1 })
+      .lean();
+
+    res.status(200).json({
+      status: true,
+      blog,
+    });
+  } catch (error) {
+    next(new ErrorHandler(500, error.message));
+  }
+};
+
+export const getBlog = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+
+    const blog = await Blog.findOne({ slug })
+      .populate("author", "name avatar role")
+      .populate("category", "name slug")
       .lean();
     res.status(200).json({
       status: true,
@@ -144,12 +188,56 @@ export const showAllBlog = async (req, res, next) => {
   }
 };
 
+export const getRelatedBlog = async (req, res, next) => {
+  try {
+    const { category, blog } = req.params;
 
-export const getBlog = async (req,res,next)=>{
- try {
-  const {slug} = req.params;
+    const categoryData = await Category.findOne({ slug: category });
+    if (!categoryData) {
+      return next(new ErrorHandler(404, "Category data not Found"));
+    }
+    const categoryId = categoryData._id;
+    const relatedBlog = await Blog.find({
+      category: categoryId,
+      slug: { $ne: blog },
+    }).lean();
+    res.status(200).json({
+      status: true,
+      relatedBlog,
+    });
+  } catch (error) {
+    next(new ErrorHandler(500, error.message));
+  }
+};
 
-    const blog = await Blog.findOne({slug})
+export const getBlogByCategory = async (req, res, next) => {
+  try {
+    const { category } = req.params;
+
+    const categoryData = await Category.findOne({ slug: category });
+    if (!categoryData) {
+      return next(new ErrorHandler(404, "Category data not Found"));
+    }
+    const categoryId = categoryData._id;
+    const blog = await Blog.find({ category: categoryId })
+      .populate("author", "name avatar role")
+      .populate("category", "name slug")
+      .lean();
+    res.status(200).json({
+      status: true,
+      blog,
+      categoryData,
+    });
+  } catch (error) {
+    next(new ErrorHandler(500, error.message));
+  }
+};
+
+export const search = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+
+    const blog = await Blog.find({ tittle: { $regex: q, $options: "i" } })
       .populate("author", "name avatar role")
       .populate("category", "name slug")
       .lean();
@@ -160,62 +248,4 @@ export const getBlog = async (req,res,next)=>{
   } catch (error) {
     next(new ErrorHandler(500, error.message));
   }
-}
-
-export const getRelatedBlog = async (req,res,next)=>{
- try {
-  const {category , blog} = req.params;
-  
-    const categoryData = await Category.findOne({slug :category })
-    if(!categoryData){
-      return next(new ErrorHandler(404, "Category data not Found"));
-    }
-    const categoryId = categoryData._id
-    const relatedBlog = await Blog.find({category : categoryId, slug:{$ne : blog}}).lean();
-    res.status(200).json({
-      status: true,
-      relatedBlog,
-    });
-  } catch (error) {
-    next(new ErrorHandler(500, error.message));
-  }
-}
-
-export const getBlogByCategory = async (req,res,next)=>{
- try {
-  const {category} = req.params;
-  
-    const categoryData = await Category.findOne({slug :category })
-    if(!categoryData){
-      return next(new ErrorHandler(404, "Category data not Found"));
-    }
-    const categoryId = categoryData._id
-    const blog = await Blog.find({category : categoryId}).populate("author", "name avatar role")
-      .populate("category", "name slug")
-      .lean();
-    res.status(200).json({
-      status: true,
-      blog,
-      categoryData
-    });
-  } catch (error) {
-    next(new ErrorHandler(500, error.message));
-  }
-}
-
-
-export const search = async (req,res,next)=>{
- try {
-  const {q} = req.query;
-  
-    const blog = await Blog.find({tittle : {$regex : q , $options : "i"}}).populate("author", "name avatar role")
-      .populate("category", "name slug")
-      .lean();
-    res.status(200).json({
-      status: true,
-      blog,
-    });
-  } catch (error) {
-    next(new ErrorHandler(500, error.message));
-  }
-}
+};

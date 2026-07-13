@@ -61,8 +61,12 @@ export const Login = async (req, res, next) => {
         name: userExist.name,
         email: userExist.email,
         avatar: userExist.avatar,
+        role: userExist.role,
       },
       process.env.JWT_SECRET,
+      { 
+    expiresIn: process.env.JWT_EXPIRE 
+  }
     );
 
     res.cookie("AccessToken", token, {
@@ -70,6 +74,7 @@ export const Login = async (req, res, next) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
     const userData = userExist.toObject();
@@ -89,6 +94,7 @@ export const GoogleLogin = async (req, res, next) => {
     const { name, email, avatar } = req.body;
     let userExist;
     userExist = await User.findOne({ email }).select("+password");
+
     if (!userExist) {
       const password = "Google@" + Math.round(Math.random() * 100000000);
       const hashpass = bcrypt.hashSync(password, 10);
@@ -109,15 +115,21 @@ export const GoogleLogin = async (req, res, next) => {
         name: userExist.name,
         email: userExist.email,
         avatar: userExist.avatar,
+        role: userExist.role,
       },
       process.env.JWT_SECRET,
+      { 
+    expiresIn: process.env.JWT_EXPIRE 
+  }
     );
+
 
     res.cookie("AccessToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
     const userData = userExist.toObject();
@@ -132,10 +144,10 @@ export const GoogleLogin = async (req, res, next) => {
     next(new ErrorHandler(500, error.message));
   }
 };
+
+
 export const Logout = async (req, res, next) => {
   try {
-   
-
     res.clearCookie("AccessToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

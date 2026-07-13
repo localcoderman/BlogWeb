@@ -26,6 +26,7 @@ const GoogleLogin = () => {
       const response = await axios.post(
         `${getenv("VITE_API_BASE_URL")}/auth/google-login`,
         bodyData,
+        { withCredentials: true },
       );
 
       if (response.status === 200) {

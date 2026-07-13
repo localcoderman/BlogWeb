@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { PiSignIn } from "react-icons/pi";
 import SearchBox from "./SearchBox";
-import { RouteBlogAdd, RouteIndex, RouteProfile, RouteSignin } from "@/helpers/RouteName";
+import {
+  RouteBlogAdd,
+  RouteIndex,
+  RouteProfile,
+  RouteSignin,
+} from "@/helpers/RouteName";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DropdownMenu,
@@ -25,31 +30,30 @@ import { getenv } from "@/helpers/GetEnv";
 import { removeUser } from "@/redux/user/user.slice";
 import { showToast } from "@/helpers/ShowToast";
 
-
-
 const Topbar = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
 
-  const handleLogout = async ()=>{
+  const handleLogout = async () => {
     try {
-      const response = await axios.get(`${getenv("VITE_API_BASE_URL")}/auth/logout`,{withCredentials:true})
-      dispatch(removeUser())
+      const response = await axios.get(
+        `${getenv("VITE_API_BASE_URL")}/auth/logout`,
+        { withCredentials: true },
+      );
+      dispatch(removeUser());
 
       if (response.status === 200) {
-              const data = response.data;
-      
-              dispatch(removeUser());
-              showToast("info", data.message);
-              navigate(RouteIndex);
-            }
-      
+        const data = response.data;
+
+        dispatch(removeUser());
+        showToast("info", data.message);
+        navigate(RouteIndex);
+      }
     } catch (error) {
       console.log(error.message);
-      
     }
-  }
+  };
 
   return (
     <div className="flex justify-between items-center h-16 fixed w-full z-20 bg-white border-b px-5">
@@ -74,43 +78,57 @@ const Topbar = () => {
             <DropdownMenuTrigger className="outline-none">
               <Avatar>
                 <AvatarImage src={user?.user?.avatar || userIcon} />
-              <AvatarFallback>{user?.user?.name?.charAt(0).toUpperCase() || "TA"}</AvatarFallback>
+                <AvatarFallback>
+                  {user?.user?.name?.charAt(0).toUpperCase() || "TA"}
+                </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="flex flex-col gap-0.5 font-normal">
-                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 truncate"> {user?.user?.name}</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate" title={user?.user?.email}> {user?.user?.email}</p>
+                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 truncate">
+                    {" "}
+                    {user?.user?.name}
+                  </p>
+                  <p
+                    className="text-xs text-zinc-500 dark:text-zinc-400 truncate"
+                    title={user?.user?.email}
+                  >
+                    {" "}
+                    {user?.user?.email}
+                  </p>
                 </DropdownMenuLabel>
-                <DropdownMenuItem asChild className="cursor-pointer"> 
-                 
+                <DropdownMenuItem asChild className="cursor-pointer">
                   <Link to={RouteProfile}>
-                   <FaRegUser />
-                  Profile
+                    <FaRegUser />
+                    Profile
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer"> 
-                 
-                  <Link to={RouteBlogAdd} >
-                  <FaPlus />
-                  Create Blog
-                  </Link>
+                  {user && user.user.role === "admin" ? (
+                    <>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                      <Link to={RouteBlogAdd}>
+                        <FaPlus />
+                        Create Blog
+                      </Link>
                 </DropdownMenuItem>
-              <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="cursor-pointer"> 
-                 
-                
-               <Button variant="ghost"  className="w-full text-start " onClick={handleLogout}>
-                   <RiLogoutBoxLine color="red" />
-                  Logout
-               </Button>
-                
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Button
+                    variant="ghost"
+                    className="w-full text-start "
+                    onClick={handleLogout}
+                  >
+                    <RiLogoutBoxLine color="red" />
+                    Logout
+                  </Button>
                 </DropdownMenuItem>
-
               </DropdownMenuGroup>
               {/* <DropdownMenuSeparator /> */}
-              
             </DropdownMenuContent>
           </DropdownMenu>
         )}
