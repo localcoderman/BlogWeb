@@ -62,10 +62,10 @@ const CommentDetails = () => {
           <Table>
             <TableHeader>
               <TableRow className="font-extrabold ">
-                <TableHead className="text-center">Blog</TableHead>
+                <TableHead className="text-center">Comment</TableHead>
                 <TableHead>Comment By</TableHead>
                 <TableHead>Date</TableHead>
-                <TableHead className="text-center">Comment</TableHead>
+                <TableHead className="text-center">Blog</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -75,12 +75,9 @@ const CommentDetails = () => {
                   <TableRow key={comment?._id}>
                     <TableCell className="flex justify-center">
                       <div className="max-w-100 whitespace-normal text-center break-words">
-
-                      {comment?.blogid?.tittle}
-                      
+                        {comment?.blogid?.tittle}
                       </div>
-                      </TableCell>
-
+                    </TableCell>
                     <TableCell>{comment?.user.name}</TableCell>
                     <TableCell>
                       {moment(comment?.createdAt).format("DD-MMMM-YYYY")}
@@ -91,8 +88,6 @@ const CommentDetails = () => {
                       </div>
                     </TableCell>
                     <TableCell className="flex items-center gap-3 h-full">
-                      
-
                       <Button
                         onClick={() => handledelete(comment._id)}
                         variant="outline"

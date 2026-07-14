@@ -44,7 +44,7 @@ const Appsidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader className="bg-white flex">
-        <img src={textlogo} alt="loading" className=" w-full p-2 mt-1.5" />
+        <img src={textlogo} alt="loading" className=" w-36 p-2 mt-1.5" />
       </SidebarHeader>
       <SidebarContent className="bg-white">
         <SidebarGroup>

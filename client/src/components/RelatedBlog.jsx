@@ -17,7 +17,7 @@ const RelatedBlog = ({ props }) => {
     axiosOptions,
   );
 
-  console.log("DATA ", relatedBlogData);
+  // console.log("DATA ", relatedBlogData);
 
   if (loading) return <div className="flex items-center justify-center h-screen font-bold">Loading...</div>;
 

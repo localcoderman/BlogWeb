@@ -1,15 +1,26 @@
-import jwt from "jsonwebtoken"
-export const Authenticate = async (req , res , next)=>{
+import jwt from "jsonwebtoken";
+
+export const Authenticate = async (req, res, next) => {
     try {
-        const token = req.cookies.AccessToken
-        if(!token){
-           return next(403 , "unAuthorized Access")
+        
+        const token = req.cookies?.AccessToken;
+        
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized Access - No Token Provided"
+            });
         }
     
-        const decodeToken = jwt.verify(token , process.env.JWT_SECRET)
-        req.user = decodeToken
-        next()
+        // 2. Token decode karein
+        const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decodeToken;
+        next(); 
+
     } catch (error) {
-        next(500 , error.message)
+        return res.status(401).json({
+            success: false,
+            message: "Invalid or expired token"
+        });
     }
-}
+};

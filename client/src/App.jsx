@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "@/Layout/Layout";
-import { RouteAddCategory, RouteBlog, RouteBlogAdd, RouteBlogByCategory, RouteBlogDetails, RouteBlogEdit, RouteCategoryDetails, RouteCommentDetails, RouteEditCategory, RouteIndex, RouteProfile, RouteSearch, RouteSignin, RouteSignup, RouteUser } from "./helpers/RouteName";
+import { RouteAbout, RouteAddCategory, RouteBlog, RouteBlogAdd, RouteBlogByCategory, RouteBlogDetails, RouteBlogEdit, RouteCategoryDetails, RouteCommentDetails, RouteEditCategory, RouteIndex, RouteProfile, RouteSearch, RouteSignin, RouteSignup, RouteUser } from "./helpers/RouteName";
 import Index from "./Pages/Index";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
@@ -19,6 +19,7 @@ import CommentDetails from "./Pages/CommentDetails";
 import UserDetails from "./Pages/UserDetails";
 import AuthRouteProtection from "./components/AuthRouteProtection";
 import AdminAllowed from "./components/AdminAllowed";
+import AboutPage from "./Pages/About";
 
 
 const App = () => {
@@ -27,6 +28,9 @@ const App = () => {
       <Routes>
         <Route path={RouteIndex} element={<Layout />}>
           <Route index element={<Index />}></Route>
+      
+
+
 
          
 
@@ -37,6 +41,7 @@ const App = () => {
           <Route path={RouteBlogDetails()} element={<BlogPageDetails/>}></Route>
           <Route path={RouteBlogByCategory()} element={<BlogByCategory/>}></Route>
           <Route path={RouteSearch()} element={<SearchResults/>}></Route>
+          <Route path={RouteAbout} element={<AboutPage/>}></Route>
 
 
 

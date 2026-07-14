@@ -14,7 +14,7 @@ const Footer = () => {
           {/* Logo/Brand Section */}
           <div className="flex flex-col space-y-3">
             <Link to={RouteIndex}>
-            <div className='flex'>
+            <div className='flex justify-center md:justify-start'>
               <h5 className="text-black font-bold tracking-[2px] text-lg">
               TECHFO
             </h5>
@@ -59,7 +59,7 @@ const Footer = () => {
             <p className="text-sm m-0">
               Have questions? Reach out to us:
             </p>
-            <a href="tel:+923267838125" className="text-white hover:underline font-semibold text-base no-underline">
+            <a href="tel:+923267838125" className="text-black mt-2 hover:underline  text-sm no-underline">
               +92 3267838125
             </a>
           </div>

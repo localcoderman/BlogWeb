@@ -44,8 +44,6 @@ const BlogDetails = () => {
     }
   };
 
-
-
   if (loading) return <>{<Loading />}</>;
 
   return (
@@ -64,21 +62,37 @@ const BlogDetails = () => {
               <TableRow>
                 <TableHead>Author</TableHead>
                 <TableHead>Category Name</TableHead>
-                <TableHead>Tittle</TableHead>
+                <TableHead className="text-center">Tittle</TableHead>
                 <TableHead>Date</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead>Action</TableHead>
+                <TableHead className="text-center">Slug</TableHead>
+                <TableHead className="text-center">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {blogData && blogData.blog.length > 0 ? (
                 blogData.blog.map((blog) => (
                   <TableRow key={blog?._id}>
-                    <TableCell>{blog?.author?.name}</TableCell>
-                    <TableCell>{blog?.category?.name}</TableCell>
-                    <TableCell>{blog?.tittle}</TableCell>
-                    <TableCell>{moment(blog?.createdAt).format(`DD-MM-YYYY (h:mm a)`)}</TableCell>
-                    <TableCell>{blog?.slug}</TableCell>
+                    <TableCell className="text-center">{blog?.author?.name}</TableCell>
+                    <TableCell className="text-center">{blog?.category?.name}</TableCell>
+                    <TableCell>
+                      <div className="w-100 whitespace-normal text-center break-words">
+                        {blog?.tittle}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {/* {moment(blog?.createdAt).format(`DD-MM-YYYY (h:mm a)`)} */}
+                      <div>
+                        {moment(blog?.createdAt).format(`DD-MM-YYYY`)}
+                      </div>
+                      <div>
+                        {moment(blog?.createdAt).format(`(h:mm a)`)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="w-100 whitespace-normal text-center break-words">
+                        {blog?.slug}
+                      </div>
+                    </TableCell>
                     <TableCell className="flex gap-3">
                       <Link to={RouteBlogEdit(blog._id)}>
                         <Button

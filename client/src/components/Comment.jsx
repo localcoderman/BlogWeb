@@ -25,7 +25,7 @@ const Comment = ({ props }) => {
     
 
 
-  // console.log(user.user._id);
+  // console.log(user);
   // // console.log(props.blogid);
 
   const {
@@ -44,33 +44,38 @@ const Comment = ({ props }) => {
 
   const onSubmit = async (data) => {
     // console.log("Comment button hit :", data);
-
-    try {
-      const newData = { ...data, blogid: props.blogid, user: user.user._id };
-
-      const response = await axios.post(
-        `${getenv("VITE_API_BASE_URL")}/comment/add`,
-        newData,
-        { withCredentials: true },
-      );
-
-      if (response.status === 200) {
-        const data = response.data;
-        // dispatch(setUser(data.user));
-        showToast("success", data.message);
-        setcallComment(data.comment)
-        
-        reset();
-        // navigate(RouteCategoryDetails);
+    if(user?.isLoggedIn === true){
+      
+      try {
+        const newData = { ...data, blogid: props.blogid, user: user.user._id };
+  
+        const response = await axios.post(
+          `${getenv("VITE_API_BASE_URL")}/comment/add`,
+          newData,
+          { withCredentials: true },
+        );
+  
+        if (response.status === 200) {
+          const data = response.data;
+          // dispatch(setUser(data.user));
+          showToast("success", data.message);
+          setcallComment(data.comment)
+          
+          reset();
+          // navigate(RouteCategoryDetails);
+        }
+      } catch (error) {
+        console.log("Error : ", error);
+  
+        showToast(
+          "error",
+          error?.response?.data?.message || "Please Login into your Account",
+        );
       }
-    } catch (error) {
-      console.log("error aa giya", error);
-
-      showToast(
-        "error",
-        error?.response?.data?.message || "Please Login into your Account",
-      );
+    }else{
+      showToast("error" , "Please Login to Your Account")
     }
+
   };
   return (
     <div>

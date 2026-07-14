@@ -110,3 +110,18 @@ export const deleteUser = async(req,res,next)=>{
     
   }
 }
+
+
+export const autoget = async (req, res, next) => {
+  try {
+    const user = req.user
+    
+   res.status(200).json({
+    success: true,
+    message: `Welcome Back ${user.name}`,
+    user
+  });
+  } catch (error) {
+    next(new ErrorHandler(501, "User Login Expire"));
+  }
+};

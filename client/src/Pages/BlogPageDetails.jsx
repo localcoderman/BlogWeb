@@ -16,7 +16,7 @@ const axiosOptions = { withCredentials: true };
 const BlogPageDetails = () => {
   const { blog  , category} = useParams();
 
-  console.log(category);
+  // console.log(category);
   
 
   const {
@@ -31,14 +31,14 @@ const BlogPageDetails = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="flex justify-between  gap-20 p-5">
+   <div className="flex flex-wrap md:flex-nowrap justify-between gap-5 md:gap-20 p-3 md:p-5 mb-10">
       {blogData && blogData.blog && (
         <>
-          <div className="border rounded w-[70%] p-5">
+          <div className="border rounded md:w-[70%] w-full p-5">
             <h1 className="text-2xl font-bold mb-5">
               {blogData?.blog?.tittle}
             </h1>
-            <div className="flex justify-between items-center ">
+            <div className="flex flex-wrap md:flex-nowrap justify-between items-center gap-4">
               <div className="flex justify-between items-center gap-5">
                 <Avatar>
                   <AvatarImage src={blogData?.blog.author.avatar} />
@@ -56,10 +56,10 @@ const BlogPageDetails = () => {
               </div>
             </div>
             <div className="my-5">
-              <img
-                src={blogData.blog.featureImage}
-                className="rounded px-10 w-250 h-100"
-              />
+             <img
+  src={blogData.blog.featureImage}
+  className="rounded w-full h-[200px] sm:h-[300px] md:h-[400px] object-cover"
+/>
             </div>
             <div
               dangerouslySetInnerHTML={{
@@ -74,7 +74,7 @@ const BlogPageDetails = () => {
           </div>
         </>
       )}
-      <div className="border rounded w-[30%]">
+      <div className="border rounded md:w-[30%] w-full">
 
         <RelatedBlog props={{category:category , currentBlog : blog}}/>
       </div>

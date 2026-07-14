@@ -25,7 +25,8 @@ const SearchResults = () => {
    <div className='flex items-center gap-3 text-3xl font-bold  border-b pb-3 mb-5'>
 <h4 > Search Results For: {q} </h4>
     </div>
-    <div className='grid grid-cols-3 gap-10 items-stretch'>
+    <div className="grid gap-6 md:gap-10 items-stretch"
+      style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
     {blogData && blogData?.blog.length>0 ? 
     
     <>

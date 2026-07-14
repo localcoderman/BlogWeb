@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import textlogo from "@/assets/images/textLogo.png";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,11 +29,16 @@ import axios from "axios";
 import { getenv } from "@/helpers/GetEnv";
 import { removeUser } from "@/redux/user/user.slice";
 import { showToast } from "@/helpers/ShowToast";
+import { IoMdSearch } from "react-icons/io";
+import { RiMenuFold2Fill } from "react-icons/ri";
+import { useSidebar } from "@/components/ui/sidebar";
 
 const Topbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const [showSearch, setshowSearch] = useState(false);
+  const { toggleSidebar } = useSidebar();
 
   const handleLogout = async () => {
     try {
@@ -55,17 +60,36 @@ const Topbar = () => {
     }
   };
 
+  const toggleSearch = () => {
+    setshowSearch(!showSearch);
+  };
+
   return (
     <div className="flex justify-between items-center h-16 fixed w-full z-20 bg-white border-b px-5">
-      <div className="w-60">
-        <Link to={RouteIndex}>
+      <div className="w-60 flex  justify-center items-center gap-3">
+        <button type="button" onClick={toggleSidebar} className="md:hidden">
+          <RiMenuFold2Fill size={20} />
+        </button>
+        <Link to={RouteIndex} className="w-44 md:w-52 mr-10">
           <img src={textlogo} alt="" />
         </Link>
       </div>
       <div className="w-[500px] boder-none">
-        <SearchBox />
+        <div
+          className={`md:relative absolute bg-white left-0 w-full top-16 md:p-0 p-5 md:top-0 md:block  ${showSearch ? "block" : "hidden"}`}
+        >
+          <SearchBox />
+        </div>
       </div>
-      <div>
+      <div className="flex gap-3">
+        <button
+          onClick={toggleSearch}
+          type="button"
+          className="md:hidden block"
+        >
+          <IoMdSearch size={25} />
+        </button>
+
         {!user?.isLoggedIn ? (
           <Button asChild className="rounded-full">
             <Link to={RouteSignin}>
@@ -104,18 +128,18 @@ const Topbar = () => {
                     Profile
                   </Link>
                 </DropdownMenuItem>
-                  {user && user.user.role === "admin" ? (
-                    <>
-                <DropdownMenuItem asChild className="cursor-pointer">
+                {user && user.user.role === "admin" ? (
+                  <>
+                    <DropdownMenuItem asChild className="cursor-pointer">
                       <Link to={RouteBlogAdd}>
                         <FaPlus />
                         Create Blog
                       </Link>
-                </DropdownMenuItem>
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <></>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Button

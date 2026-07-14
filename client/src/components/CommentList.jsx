@@ -20,6 +20,8 @@ const CommentList = ({ props }) => {
     axiosOptions, [props.callComment]
   );
 
+  // console.log(commentData);
+  
 
 
   if (loading) return <div>Loading...</div>;
@@ -38,7 +40,7 @@ const CommentList = ({ props }) => {
               <div className="flex mb-6 gap-3" key={comment._id}>
                
                  <Avatar className='mt-2'>
-                  <AvatarImage src={comment?.user.avatar || icon} />
+                  <AvatarImage src={comment?.user?.avatar || icon} />
                 </Avatar>
                 <div>
                   <h4 className="font-bold">{comment?.user.name}</h4>

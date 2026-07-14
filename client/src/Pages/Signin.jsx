@@ -12,6 +12,7 @@ import { showToast } from "@/helpers/ShowToast";
 import GoogleLogin from "@/components/GoogleLogin";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/user/user.slice";
+import logo from "@/assets/images/textLogo.png"
 
 // 1. Zod Validation Schema Define Kiya
 const loginSchema = z.object({
@@ -74,10 +75,17 @@ const Signin = () => {
 
   return (
     <>
-      <Topbar />
+     
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 dark:bg-zinc-950">
+     
+
         <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          {/* Heading Section */}
+         
+        <Link to="/">
+             <div className="flex justify-center items-center mb-4 ">
+          <img src={logo}  className="w-56" alt="" />
+        </div>
+        </Link>
           <div className="mb-6 text-center">
             <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
               Welcome Back

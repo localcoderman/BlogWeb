@@ -26,11 +26,12 @@ const BlogByCategory = () => {
 if(loading) return <Loading/>
   return (
     <>
-    <div className='flex items-center gap-3 text-3xl font-bold  border-b pb-3 mb-5'>
+    <div className='flex items-center gap-3 text-3xl font-bold  border-b pb-3 mb-5 '>
 <TbCategory2 />
 <h4 >{ blogData && blogData.categoryData?.name}</h4>
     </div>
-    <div className='grid grid-cols-3 gap-10 items-stretch'>
+    <div className="grid gap-6 md:gap-10 items-stretch  mb-10"
+      style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
     {blogData && blogData?.blog.length>0 ? 
     
     <>
